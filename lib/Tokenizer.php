@@ -1,6 +1,9 @@
 <?php
 
-class Tokenizer
+require_once ('EventEmitter.php');
+
+
+class Tokenizer extends EventEmitter
 {
   private $parser = null;
 
@@ -18,16 +21,28 @@ class Tokenizer
   }
 
   private function defaultTokenizer($str) {
+
+    $result = [];
     $parts = explode(' ', $str);
-    $parts = array_map(function($item) {
+
+    $count = count($parts);
+
+    for($i = 0; $i < $count; ++$i) {
+      $item = $parts[$i];
       $term = trim($item);
       $term = preg_replace('/[^a-zA-Z0-9]/i', '', $term);
 
-      return $term;
+      if(empty($term)) {
+        continue;
+      }
 
-    }, $parts);
+      // Emit the term event.
+      $this->emit('term', $term);
 
-    return $parts;
+      $result[] = $term;
+    }
+
+    return $result;
   }
 
   public function tokenize($str) {

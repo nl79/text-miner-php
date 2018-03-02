@@ -3,10 +3,27 @@
 class Document
 {
   private $file = null;
+  private $filepath = '';
 
   public function __construct($filepath, $mode)
   {
+    $this->filepath = $filepath;
     $this->file = $this->open($filepath, $mode);
+  }
+
+  public function name() {
+    $parts = preg_split('/[\\\\\/]/', trim($this->filepath));
+    return $parts[count($parts)-1];
+  }
+
+  public function path() {
+    return $this->filepath;
+  }
+
+  public function __toString()
+  {
+    // TODO: Implement __toString() method.
+    return $this->filepath;
   }
 
   public function open($filepath, $mode) {
