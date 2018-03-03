@@ -1,4 +1,4 @@
-<!-- 23-Jan-97 This is v1.1 of lewis.dtd, a corrected version by Chris Brew  -->
+<!-- 23-Jan-97 This is v1.1.txt of lewis.dtd, a corrected version by Chris Brew  -->
 <!ELEMENT LEWIS O O (REUTERS+)>
 <!ELEMENT REUTERS - - (DATE,(UNKNOWN|MKNOTE)*,TOPICS,PLACES,PEOPLE,ORGS,EXCHANGES,COMPANIES,UNKNOWN?,TEXT)>
 <!ELEMENT HEAD - - (#PCDATA)>

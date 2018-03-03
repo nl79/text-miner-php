@@ -12,6 +12,10 @@ $fs = new FileSystem();
 $tokenizer = new Tokenizer();
 $tfIndex = new Indexer();
 $idfIndex = new Indexer();
+
+// Transactions index to store document => [terms];
+$transactions = new Indexer();
+
 $tfidf = new TFIDF();
 
 //$files = $fs->listFiles($dir, 'sgm');
@@ -26,11 +30,8 @@ $document = null;
 
 // On term event handler that will capture every term produce by the tokenizer and index it
 $tokenizer->on('term', function($term) use ($tfIndex, $idfIndex, &$document) {
-  print("term: $term | document: ". $document->name() . "\n");
-
   $tfIndex->index($document->name(), $term);
   $idfIndex->index($term, $document->name());
-
 });
 
 foreach($files as $file) {
@@ -44,14 +45,14 @@ foreach($files as $file) {
 $tfidf->setDocumentIndex($idfIndex->getIndex());
 $tfidf->setTermIndex($tfIndex->getIndex());
 
-foreach($idfIndex->getIndex() as $term => $docs) {
+foreach($tfIndex->getIndex() as $doc => $terms) {
 
-  foreach($docs as $doc => $count) {
-    print('result; ' . $tfidf->process($term, $doc) . "\n");
+  foreach($terms as $term => $count) {
+
+   // print("Document: $doc | Term: $term | score: " . $tfidf->process($term, $doc) . "\n");
+    $transactions->index($doc, $term, $tfidf->process($term, $doc));
   }
 }
 
-
-//print_r($tfIndex->getIndex());
-//print_r($idfIndex->getIndex());
+print_r($transactions->getIndex());
 

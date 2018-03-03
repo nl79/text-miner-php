@@ -23,7 +23,7 @@ class Indexer
     return $this->index;
   }
 
-  public function index($key, $val) {
+  public function index($key, $val, $meta = null) {
     if(!isset($this->index[$key])) {
       $this->index[$key] = [$val => 1];
       return $this;
@@ -32,9 +32,9 @@ class Indexer
     $key = &$this->index[$key];
 
     if(isset($key[$val])) {
-      $key[$val]++;
+      $key[$val] = !is_null($meta) ? $meta : $key[$val] + 1;
     } else {
-      $key[$val] = 1;
+      $key[$val] = !is_null($meta) ? $meta : 1;
     }
 
     return $this;
