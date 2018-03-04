@@ -25,21 +25,37 @@ $tfIndex = new Indexer();
 $idfIndex = new Indexer();
 $tfidf = new TFIDF();
 
+$stopWordList = './data/stop';
+
 $outputDir = './output';
+
+$stopDoc = new Document($stopWordList, 'r');
+
+$stop = [];
+while(!$stopDoc->finished()) {
+  $stop[strtolower(trim($stopDoc->read()))] = true;
+}
 
 //$dir = './data/samples';
 //$files = $fs->listFiles($dir, 'txt');
 $dir = './data/reuters21578';
 $files = $fs->listFiles($dir, 'sgm');
 
-print_r($files);
+//print_r($files);
+//print_r($stop);
 
 $document = null;
 
 // On term event handler that will capture every term produce by the tokenizer and index it
-$tokenizer->on('term', function($term) use ($tfIndex, $idfIndex, &$document) {
-  $tfIndex->index($document->name(), $term);
-  $idfIndex->index($term, $document->name());
+$tokenizer->on('term', function($term) use (&$tfIndex, &$idfIndex, &$document, &$stop) {
+
+  //check the stop words list.
+  if(!isset($stop) || !isset($stop[strtolower(trim($term))])) {
+    $tfIndex->index($document->name(), $term);
+    $idfIndex->index($term, $document->name());
+  } else {
+    //print("Excluding: $term \n");
+  }
 });
 
 foreach($files as $file) {
