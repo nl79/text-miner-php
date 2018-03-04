@@ -28,9 +28,9 @@ class Document
 
   public function open($filepath, $mode) {
     // Check if file
-    if(!is_file($filepath)) {
-      throw new Exception('Invalid Filepath supplied');
-    }
+//    if(!is_file($filepath)) {
+//      throw new Exception('Invalid Filepath supplied');
+//    }
 
     // Open file and save handle
     return fopen($filepath, $mode);
@@ -64,7 +64,7 @@ class Document
     if(is_numeric($length)) {
       return fwrite($this->file, $str, $length);
     } else {
-      return fwrite($this->file, $str, $length);
+      return fwrite($this->file, $str);
     }
   }
 

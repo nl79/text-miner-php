@@ -39,12 +39,12 @@ class TFIDF
     return $result;
   }
 
-  public function setTermIndex($value) {
-    $this->tfIndex = $value;
+  public function setTermIndex(&$value) {
+    $this->tfIndex = &$value;
   }
 
-  public function setDocumentIndex($value) {
-    $this->dfIndex = $value;
+  public function setDocumentIndex(&$value) {
+    $this->dfIndex = &$value;
   }
 
 }
