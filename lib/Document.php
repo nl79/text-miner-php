@@ -58,6 +58,22 @@ class Document
     return null;
   }
 
+  public function write($str, $length = null) {
+    // Validate input and file handler.
+
+    if(is_numeric($length)) {
+      return fwrite($this->file, $str, $length);
+    } else {
+      return fwrite($this->file, $str, $length);
+    }
+  }
+
+  public function writeLine($str, $length = null) {
+    // Validate input and file handler.
+    $str.= PHP_EOL;
+    return $this->write($str, $length);
+  }
+
   public function finished() {
     if(is_null($this->file)) {
       return true;
