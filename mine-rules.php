@@ -14,7 +14,7 @@ $options = getopt($shortopts, $longopts);
 
 // Default Values
 $confidence = .2;
-$support = .2;
+$support = .3;
 $kterms = 2500;
 
 if(isset($options['supp'])) {
