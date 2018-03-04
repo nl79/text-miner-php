@@ -13,7 +13,7 @@ $longopts = [
   'k-terms:'
 ];
 $options = getopt($shortopts, $longopts);
-$kterms = 15;
+$kterms = null;
 
 if(isset($options['k-terms'])) {
   $kterms = $options['k-terms'];
@@ -73,15 +73,22 @@ foreach($tfIndex->getIndex() as $doc => $terms) {
   // Document that will contain the term weights per document.
   $tfIdfOutDoc = new Document($outputDir . DIRECTORY_SEPARATOR . 'tf-idf_' . $doc , 'w');
 
+  // Write the document title.
+  $transList->write($doc . ',');
+
   $count = 0;
   $k_terms = [];
 
   foreach($items as $term => $score) {
 
-    // Save the k terms.
-    if($count !== $kterms) {
-      $k_terms[] = $term;
+    // Write the term into the transaction.
+    if(!is_null($kterms) && $kterms !== $count) {
+      //$k_terms[] = $term;
+      $transList->write($term . ',');
       $count++;
+    } else {
+      //$k_terms[] = $term;
+      $transList->write($term . ',');
     }
 
     // Write the term and value to the file.
@@ -89,6 +96,7 @@ foreach($tfIndex->getIndex() as $doc => $terms) {
   }
 
   // Write the transactions base on the k value.
-  $trans = $doc . ',' . implode(',', $k_terms);
-  $transList->writeLine($trans);
+  //$trans = $doc . ',' . implode(',', $k_terms);
+  //$transList->writeLine($trans);
+  $transList->writeLine('');
 }
