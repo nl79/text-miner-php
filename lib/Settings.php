@@ -7,7 +7,7 @@ class Settings
 
   public function __construct()
   {
-
+    $this->init();
   }
 
   public function init() {
@@ -19,31 +19,25 @@ class Settings
       'k-terms:'
     ];
     $options = getopt($shortopts, $longopts);
-// Default Values
-    $confidence = .5;
-    $support = .5;
-    $kterms = 5;
 
-    if(isset($options['supp'])) {
-      $support = $options['supp'];
+    foreach($options as $key => $val) {
+      $this->set($key, $val);
     }
-
-    if(isset($options['conf'])) {
-      $confidence = $options['conf'];
-    }
-
-    if(isset($options['k-terms'])) {
-      $kterms = $options['k-terms'];
-    }
-
-    $config = [
-      'confidence' => $confidence,
-      'support' => $support
-    ];
-
   }
-  public function get($key) {
 
+  public function set($key, $value) {
+    $this->settings[$key] = $value;
+    return $this;
+  }
+  public function get($key, $default = null) {
+
+    if(isset($this->settings[$key])) {
+      return $this->settings[$key];
+    }
+
+    return $default;
   }
 
 }
+
+$conf = new Settings();

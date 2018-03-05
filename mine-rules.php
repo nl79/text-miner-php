@@ -1,34 +1,13 @@
 <?php
 
 require_once('./lib/Apriori/Apriori.php');
+require_once('./lib/Settings.php');
 
-// Configuration for the Apriori object.
-$shortopts = "s:c:K:";
-$longopts = [
-  'supp:',
-  'conf:',
-  'k-terms:'
-];
-
-$options = getopt($shortopts, $longopts);
-
+$settings = new Settings();
 // Default Values
-$confidence = .2;
-$support = .3;
-$kterms = 2500;
-
-if(isset($options['supp'])) {
-  $support = $options['supp'];
-}
-
-if(isset($options['conf'])) {
-  $confidence = $options['conf'];
-}
-
-if(isset($options['k-terms'])) {
-  $kterms = $options['k-terms'];
-}
-
+$confidence = $settings->get('conf', .2);
+$support = $settings->get('supp', .3);
+$kterms = $settings->get('k-terms', 2500);
 
 $config = [
   'confidence' => $confidence,

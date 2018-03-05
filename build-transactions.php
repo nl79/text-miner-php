@@ -5,25 +5,17 @@ require_once('./lib/Document.php');
 require_once('./lib/Tokenizer.php');
 require_once('./lib/Indexer.php');
 require_once('./lib/TFIDF.php');
-
-$shortopts = "s:c:k:";
-$longopts = [
-  'supp:',
-  'conf:',
-  'k-terms:'
-];
-$options = getopt($shortopts, $longopts);
-$kterms = null;
-
-if(isset($options['k-terms'])) {
-  $kterms = $options['k-terms'];
-}
+require_once('./lib/Settings.php');
 
 $fs = new FileSystem();
 $tokenizer = new Tokenizer();
 $tfIndex = new Indexer();
 $idfIndex = new Indexer();
 $tfidf = new TFIDF();
+$settings = new Settings();
+
+
+$kterms = $settings->get('k-terms');
 
 $stopWordList = './data/stop';
 
@@ -53,8 +45,6 @@ $tokenizer->on('term', function($term) use (&$tfIndex, &$idfIndex, &$document, &
   if(!isset($stop) || !isset($stop[strtolower(trim($term))])) {
     $tfIndex->index($document->name(), $term);
     $idfIndex->index($term, $document->name());
-  } else {
-    //print("Excluding: $term \n");
   }
 });
 
@@ -97,6 +87,9 @@ foreach($tfIndex->getIndex() as $doc => $terms) {
 
   foreach($items as $term => $score) {
 
+    // Write the term and value to the file.
+    $tfIdfOutDoc->writeLine($term . ' : ' . $score);
+
     // Write the term into the transaction.
     if(!is_null($kterms) && $kterms !== $count) {
       //$k_terms[] = $term;
@@ -106,13 +99,8 @@ foreach($tfIndex->getIndex() as $doc => $terms) {
       //$k_terms[] = $term;
       $transList->write($term . ',');
     }
-
-    // Write the term and value to the file.
-    $tfIdfOutDoc->writeLine($term . ' : ' . $score);
   }
 
   // Write the transactions base on the k value.
-  //$trans = $doc . ',' . implode(',', $k_terms);
-  //$transList->writeLine($trans);
   $transList->writeLine('');
 }
