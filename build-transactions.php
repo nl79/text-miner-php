@@ -15,8 +15,23 @@ $tfidf = new TFIDF();
 $settings = new Settings();
 
 $kterms = $settings->get('k-terms');
-$dir = $settings->get('input-dir', './data/reuters21578');
+$inputDir = $settings->get('input-dir', './data/reuters21578');
+$ext = $settings->get('ext', 'sgm');
 $outputDir = $settings->get('output-dir', './output');
+$verbose = $settings->get('verbose', true);
+
+var_dump($settings->raw());
+
+var_dump($inputDir);
+var_dump($ext);
+var_dump($outputDir);
+
+echo("------Executing Job With the following parameters:\n");
+echo("Input Directory: $inputDir \n");
+echo("File Extension: $ext \n");
+echo("Output Directory: $outputDir \n");
+echo("Verbose: $verbose \n");
+echo("K Terms to keep:" . (is_null( $kterms) ? ' All' :  $kterms) . "\n");
 
 $stopWordList = './data/stop';
 $stopDoc = new Document($stopWordList, 'r');
@@ -26,7 +41,7 @@ while(!$stopDoc->finished()) {
   $stop[strtolower(trim($stopDoc->read()))] = true;
 }
 
-$files = $fs->listFiles($dir, 'sgm');
+$files = $fs->listFiles($inputDir, $ext);
 
 $document = null;
 
@@ -41,11 +56,16 @@ $tokenizer->on('term', function($term) use (&$tfIndex, &$idfIndex, &$document, &
 });
 
 foreach($files as $file) {
+
+  echo("Loading File: $file \n");
+
   $document = new Document($file, 'r');
   while(!$document->finished()) {
     $tokenizer->tokenize($document->readSafe());
   }
 }
+
+echo("--Executing TF-IDF--  \n");
 
 // Setup the TFIDF Algorithm
 $tfidf->setDocumentIndex($idfIndex->getIndex());
@@ -68,8 +88,11 @@ foreach($tfIndex->getIndex() as $doc => $terms) {
   // sort the terms
   arsort($items);
 
+  $outputFile = $outputDir . DIRECTORY_SEPARATOR . 'tf-idf_' . $doc;
+
+  echo("Writing TF-IDF scores to file: $outputFile \n");
   // Document that will contain the term weights per document.
-  $tfIdfOutDoc = new Document($outputDir . DIRECTORY_SEPARATOR . 'tf-idf_' . $doc , 'w');
+  $tfIdfOutDoc = new Document($outputFile, 'w');
 
   // Write the document title.
   $transList->write($doc . ',');

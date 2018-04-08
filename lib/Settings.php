@@ -12,11 +12,15 @@ class Settings
 
   public function init() {
 
-    $shortopts = "s:c:k:";
+    $shortopts = "s:c:k:i:o:e:v::";
     $longopts = [
       'supp:',
       'conf:',
-      'k-terms:'
+      'k-terms:',
+      'input-dir:',
+      'output-dir:',
+      'ext:',
+      'verbose::'
     ];
     $options = getopt($shortopts, $longopts);
 
@@ -31,11 +35,15 @@ class Settings
   }
   public function get($key, $default = null) {
 
-    if(isset($this->settings[$key])) {
+    if(isset($this->settings[$key]) && $this->settings[$key]) {
       return $this->settings[$key];
     }
 
     return $default;
+  }
+
+  public function raw() {
+    return $this->settings;
   }
 }
 
