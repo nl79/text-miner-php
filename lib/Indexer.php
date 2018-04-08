@@ -24,8 +24,6 @@ class Item {
     $this->meta[$key] = $value;
     return $this;
   }
-
-
 }
 
 class Indexer

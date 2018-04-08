@@ -11,8 +11,6 @@ class Tokenizer extends EventEmitter
 
   public function __construct($parser = null)
   {
-
-
     $this->parser($parser);
   }
 
@@ -48,6 +46,5 @@ class Tokenizer extends EventEmitter
   public function tokenize($str) {
     // check if custom tokenizers are supplied.
     return $this->defaultTokenizer($str);
-
   }
 }

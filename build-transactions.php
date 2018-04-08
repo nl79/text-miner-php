@@ -14,13 +14,11 @@ $idfIndex = new Indexer();
 $tfidf = new TFIDF();
 $settings = new Settings();
 
-
 $kterms = $settings->get('k-terms');
+$dir = $settings->get('input-dir', './data/reuters21578');
+$outputDir = $settings->get('output-dir', './output');
 
 $stopWordList = './data/stop';
-
-$outputDir = './output';
-
 $stopDoc = new Document($stopWordList, 'r');
 
 $stop = [];
@@ -28,13 +26,7 @@ while(!$stopDoc->finished()) {
   $stop[strtolower(trim($stopDoc->read()))] = true;
 }
 
-//$dir = './data/samples';
-//$files = $fs->listFiles($dir, 'txt');
-$dir = './data/reuters21578';
 $files = $fs->listFiles($dir, 'sgm');
-
-//print_r($files);
-//print_r($stop);
 
 $document = null;
 

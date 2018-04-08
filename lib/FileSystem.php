@@ -40,8 +40,6 @@ class FileSystem
       return strtolower($item);
     }, $ext);
 
-
-
     $list = [];
     $count = count($files);
 

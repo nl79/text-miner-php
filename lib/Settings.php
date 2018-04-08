@@ -37,7 +37,6 @@ class Settings
 
     return $default;
   }
-
 }
 
 $conf = new Settings();
