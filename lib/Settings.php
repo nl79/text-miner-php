@@ -12,7 +12,7 @@ class Settings
 
   public function init() {
 
-    $shortopts = "s:c:k:i:o:e:v::";
+    $shortopts = "s:c:k:i:o:e:v::f:";
     $longopts = [
       'supp:',
       'conf:',
@@ -20,7 +20,8 @@ class Settings
       'input-dir:',
       'output-dir:',
       'ext:',
-      'verbose::'
+      'verbose::',
+      'files:'
     ];
     $options = getopt($shortopts, $longopts);
 

@@ -20,12 +20,6 @@ $ext = $settings->get('ext', 'sgm');
 $outputDir = $settings->get('output-dir', './output');
 $verbose = $settings->get('verbose', true);
 
-var_dump($settings->raw());
-
-var_dump($inputDir);
-var_dump($ext);
-var_dump($outputDir);
-
 echo("------Executing Job With the following parameters:\n");
 echo("Input Directory: $inputDir \n");
 echo("File Extension: $ext \n");

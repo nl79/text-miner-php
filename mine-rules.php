@@ -8,6 +8,22 @@ $settings = new Settings();
 $confidence = $settings->get('conf', .2);
 $support = $settings->get('supp', .3);
 $kterms = $settings->get('k-terms', 2500);
+$fileList = $settings->get('files');
+
+echo("------Executing Job With the following parameters:\n");
+echo("Confidence: $confidence \n");
+echo("Support: $support \n");
+echo("File List: $fileList \n");
+echo("K Terms to analyze: " . (is_null( $kterms) ? ' All' :  $kterms) . "\n");
+
+// Split the file list into an array of paths.
+$fileList = !is_null($fileList) ? explode(',', $fileList) : null;
+
+// Validate files were supplied.
+if(is_null($fileList) || count($fileList) < 1) {
+  echo("Filepaths invalid or missing \n");
+  exit;
+}
 
 $config = [
   'confidence' => $confidence,
@@ -19,9 +35,10 @@ $miner;
 $result = [];
 
 // Array of input files
-$files = [
-  './output/transactions.txt'
-];
+//$files = [
+//  './output/transactions.txt'
+//];
+$files = $fileList;
 
 foreach($files as $file) {
   $fh = fopen($file,'r');
